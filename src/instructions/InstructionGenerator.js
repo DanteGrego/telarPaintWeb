@@ -81,18 +81,21 @@ export function generateInstructions() {
 }
 
 /**
- * Format a single instruction as a human-readable string (Spanish).
+ * Format a single instruction using arrow symbols.
+ * Single row:    "1 - 4↑ 2↓ 4↑"
+ * Repeated rows: "2-5 - 4↑ 2↓ 4↑"
+ *
  * @param {{ rowStart, rowEnd, segments, repeated }} instr
  * @returns {string}
  */
 export function formatInstruction(instr) {
   const segText = instr.segments
-    .map((s) => `${s.count} ${s.color === 'A' ? 'arriba' : 'abajo'}`)
-    .join(', ');
+    .map((s) => `${s.count}${s.color === 'A' ? '↑' : '↓'}`)
+    .join(' ');
 
-  if (instr.rowStart === instr.rowEnd) {
-    return `Fila ${instr.rowStart}: ${segText}`;
-  }
-  return `Filas ${instr.rowStart}–${instr.rowEnd}: Repetir [${segText}]`;
+  const rowLabel = instr.rowStart === instr.rowEnd
+    ? `${instr.rowStart}`
+    : `${instr.rowStart}-${instr.rowEnd}`;
+
+  return `${rowLabel} - ${segText}`;
 }
-

@@ -48,51 +48,38 @@ function renderInstructions() {
     const div = document.createElement('div');
     div.className = 'instruction-row' + (instr.repeated ? ' repeated' : '');
 
-    // Label
+    // Row label: "1" or "2-5"
     const label = document.createElement('span');
     label.className = 'row-label';
-    if (instr.rowStart === instr.rowEnd) {
-      label.textContent = `Fila ${instr.rowStart}:`;
-    } else {
-      label.textContent = `Filas ${instr.rowStart}–${instr.rowEnd}:`;
-    }
+    label.textContent = instr.rowStart === instr.rowEnd
+      ? `${instr.rowStart}`
+      : `${instr.rowStart}-${instr.rowEnd}`;
 
-    // Detail: colored segments
+    const dash = document.createElement('span');
+    dash.className = 'row-dash';
+    dash.textContent = ' - ';
+
+    // Segments: "4↑ 2↓ 4↑" with each arrow colored
     const detail = document.createElement('span');
     detail.className = 'row-detail';
 
-    const segParts = instr.segments.map((seg, i) => {
+    instr.segments.forEach((seg, i) => {
       const sp = document.createElement('span');
-      sp.className = 'instruction-segment ' + (seg.color === 'A' ? 'seg-a' : 'seg-b');
-
-      const swatch = document.createElement('span');
-      swatch.style.cssText = `
-        display:inline-block;
-        width:10px;height:10px;
-        border-radius:2px;
-        background:${seg.color === 'A' ? colorA : colorB};
-        border:1px solid rgba(255,255,255,0.2);
-        vertical-align:middle;
-        margin-right:3px;
-      `;
-
-      sp.appendChild(swatch);
-      sp.appendChild(document.createTextNode(
-        `${seg.count} ${seg.color === 'A' ? 'arriba' : 'abajo'}${i < instr.segments.length - 1 ? ', ' : ''}`
-      ));
-      return sp;
+      sp.className = 'instruction-segment';
+      sp.style.color = seg.color === 'A' ? colorA : colorB;
+      // Add a subtle text shadow for readability on dark bg
+      sp.style.textShadow = '0 0 4px rgba(0,0,0,0.8), 0 0 2px rgba(0,0,0,1)';
+      sp.style.fontWeight = '700';
+      sp.style.fontSize = '15px';
+      sp.textContent = `${seg.count}${seg.color === 'A' ? '↑' : '↓'}`;
+      if (i < instr.segments.length - 1) {
+        sp.style.marginRight = '6px';
+      }
+      detail.appendChild(sp);
     });
 
-    if (instr.repeated) {
-      const repeatLabel = document.createElement('em');
-      repeatLabel.style.cssText = 'font-size:11px;color:var(--accent);display:block;margin-bottom:2px';
-      repeatLabel.textContent = `× ${instr.rowEnd - instr.rowStart + 1} filas — `;
-      detail.appendChild(repeatLabel);
-    }
-
-    segParts.forEach((sp) => detail.appendChild(sp));
-
     div.appendChild(label);
+    div.appendChild(dash);
     div.appendChild(detail);
     instrContent.appendChild(div);
   }

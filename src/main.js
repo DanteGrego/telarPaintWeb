@@ -35,10 +35,6 @@ import './ui/InstructionsPanel.js';
 import { state } from './store/AppState.js';
 import { toolManager } from './tools/ToolManager.js';
 
-// ── Add Rows button ───────────────────────────────────────────────────────────
-document.getElementById('btn-add-rows').addEventListener('click', () => {
-  state.addRows(10);
-});
 
 // ── PWA Service Worker ────────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {

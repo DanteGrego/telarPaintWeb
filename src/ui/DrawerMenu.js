@@ -67,6 +67,10 @@ btnNewPattern.addEventListener('click', () => {
   const title = inputTitle.value.trim() || 'Sin título';
   if (!confirm('¿Crear un nuevo patrón? Se perderán los cambios no guardados.')) return;
   state.reset(cols, rows, title);
+  // Reset dimension inputs to defaults after creation
+  inputTitle.value = '';
+  inputCols.value = 20;
+  inputRows.value = 20;
   closeDrawer();
   showToast('Nuevo patrón creado');
 });
