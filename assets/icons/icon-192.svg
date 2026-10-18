@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <defs>
+    <clipPath id="r"><rect width="192" height="192" rx="34"/></clipPath>
+  </defs>
+  <rect width="192" height="192" rx="34" fill="#2d2d2d"/>
+  <g clip-path="url(#r)">
+    <!-- 5x5 telar pattern centered -->
+    <!-- Row 0 -->
+    <rect x="26" y="26" width="27" height="27" rx="3" fill="#7c6af0"/>
+    <rect x="58" y="26" width="27" height="27" rx="3" fill="#e8d5b7"/>
+    <rect x="90" y="26" width="27" height="27" rx="3" fill="#7c6af0"/>
+    <rect x="122" y="26" width="27" height="27" rx="3" fill="#e8d5b7"/>
+    <rect x="154" y="26" width="27" height="27" rx="3" fill="#7c6af0"/>
+    <!-- Row 1 -->
+    <rect x="26" y="58" width="27" height="27" rx="3" fill="#e8d5b7"/>
+    <rect x="58" y="58" width="27" height="27" rx="3" fill="#7c6af0"/>
+    <rect x="90" y="58" width="27" height="27" rx="3" fill="#e8d5b7"/>
+    <rect x="122" y="58" width="27" height="27" rx="3" fill="#7c6af0"/>
+    <rect x="154" y="58" width="27" height="27" rx="3" fill="#e8d5b7"/>
+    <!-- Row 2 -->
+    <rect x="26" y="90" width="27" height="27" rx="3" fill="#7c6af0"/>
+    <rect x="58" y="90" width="27" height="27" rx="3" fill="#e8d5b7"/>
+    <rect x="90" y="90" width="27" height="27" rx="3" fill="#7c6af0"/>
+    <rect x="122" y="90" width="27" height="27" rx="3" fill="#e8d5b7"/>
+    <rect x="154" y="90" width="27" height="27" rx="3" fill="#7c6af0"/>
+    <!-- Row 3 -->
+    <rect x="26" y="122" width="27" height="27" rx="3" fill="#e8d5b7"/>
+    <rect x="58" y="122" width="27" height="27" rx="3" fill="#7c6af0"/>
+    <rect x="90" y="122" width="27" height="27" rx="3" fill="#e8d5b7"/>
+    <rect x="122" y="122" width="27" height="27" rx="3" fill="#7c6af0"/>
+    <rect x="154" y="122" width="27" height="27" rx="3" fill="#e8d5b7"/>
+    <!-- Row 4 -->
+    <rect x="26" y="154" width="27" height="27" rx="3" fill="#7c6af0"/>
+    <rect x="58" y="154" width="27" height="27" rx="3" fill="#e8d5b7"/>
+    <rect x="90" y="154" width="27" height="27" rx="3" fill="#7c6af0"/>
+    <rect x="122" y="154" width="27" height="27" rx="3" fill="#e8d5b7"/>
+    <rect x="154" y="154" width="27" height="27" rx="3" fill="#7c6af0"/>
+  </g>
+</svg>
+
