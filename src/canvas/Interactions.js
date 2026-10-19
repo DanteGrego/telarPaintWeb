@@ -90,7 +90,13 @@ function onPointerDown(e) {
 }
 
 function onPointerMove(e) {
-  if (!_isDown) return;
+  if (!_isDown) {
+    if (state.activeTool === 'paste') {
+      const cell = cellFromPointerEvent(e);
+      toolManager.onPointerMove(cell, e);
+    }
+    return;
+  }
 
   if (state.activeTool === 'pan' || _panStart) {
     updatePan(e);
@@ -178,6 +184,11 @@ viewport.addEventListener('touchmove', onTouchMove, { passive: false });
 viewport.addEventListener('touchend', onTouchEnd, { passive: true });
 
 viewport.addEventListener('wheel', onWheel, { passive: false });
+
+viewport.addEventListener('mouseleave', () => {
+  const box = document.getElementById('paste-preview-box');
+  if (box) box.classList.add('hidden');
+});
 
 // Prevent context menu on long press / right click over grid
 viewport.addEventListener('contextmenu', (e) => e.preventDefault());

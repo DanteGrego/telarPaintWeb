@@ -103,7 +103,7 @@ export function applyZoom(zoom) {
 export function renderSelection(sel) {
   // Clear previous
   for (const el of _cells) el.classList.remove('selected');
-  if (!sel) return;
+  if (!sel || state.activeTool !== 'select') return;
   const r1 = Math.min(sel.r1, sel.r2);
   const r2 = Math.max(sel.r1, sel.r2);
   const c1 = Math.min(sel.c1, sel.c2);
@@ -164,4 +164,11 @@ state.addEventListener('zoomChange', (e) => applyZoom(e.detail.zoom));
 state.addEventListener('selectionChange', (e) => renderSelection(e.detail.selection));
 state.addEventListener('dimensionsChange', () => buildGrid());
 state.addEventListener('symmetryChange', () => updateSymmetryGuides());
+state.addEventListener('toolChange', () => {
+  renderSelection(state.selection);
+  if (state.activeTool !== 'paste') {
+    const box = document.getElementById('paste-preview-box');
+    if (box) box.classList.add('hidden');
+  }
+});
 

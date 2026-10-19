@@ -19,10 +19,10 @@
   --accent: #7c6af0;
   --accent-hover: #9b8cf7;
   --danger: #e05c5c;
-  --cell-size: 28px;
-  --toolbar-w: 56px;
-  --topbar-h: 52px;
-  --radius: 8px;
+  --cell-size: 26px;
+  --toolbar-w: 48px;
+  --topbar-h: 46px;
+  --radius: 6px;
   --shadow: 0 4px 16px rgba(0,0,0,0.5);
   touch-action: manipulation;
 }
@@ -33,7 +33,7 @@ html, body {
   background: var(--bg);
   color: var(--text);
   font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-  font-size: 14px;
+  font-size: 13px;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
@@ -57,19 +57,19 @@ html, body {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   z-index: 10;
-  gap: 8px;
+  gap: 6px;
 }
 
 #topbar-left, #topbar-center, #topbar-right {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
 }
 
 .title-text {
   font-weight: 600;
-  font-size: 15px;
-  max-width: 160px;
+  font-size: 14px;
+  max-width: 140px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -82,20 +82,21 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  padding: 8px 4px;
+  gap: 3px;
+  padding: 6px 2px calc(42px + env(safe-area-inset-bottom, 0px)) 2px;
   background: var(--surface);
   border-right: 1px solid var(--border);
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 9;
+  -webkit-overflow-scrolling: touch;
 }
 
 #tool-buttons {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   width: 100%;
 }
 
@@ -104,8 +105,8 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border: none;
   border-radius: var(--radius);
   background: transparent;
@@ -116,8 +117,8 @@ html, body {
 }
 
 .icon-btn svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 
 .icon-btn:hover, .icon-btn:focus-visible {
@@ -136,13 +137,13 @@ html, body {
 }
 
 .icon-btn.small {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
 }
 
 .icon-btn.small svg {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
 }
 
 /* ── Color Section ── */
@@ -150,9 +151,9 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  margin-top: 8px;
-  padding-top: 8px;
+  gap: 3px;
+  margin-top: 4px;
+  padding-top: 4px;
   border-top: 1px solid var(--border);
   width: 100%;
 }
@@ -160,7 +161,8 @@ html, body {
 .color-pair {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 3px;
+  align-items: center;
 }
 
 .color-swatch-label {
@@ -168,7 +170,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  gap: 2px;
+  gap: 1px;
 }
 
 .color-swatch-label input[type="color"] {
@@ -180,9 +182,9 @@ html, body {
 }
 
 .color-swatch {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
   border: 2px solid var(--border);
   display: block;
   cursor: pointer;
@@ -200,7 +202,7 @@ html, body {
 }
 
 .color-label {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   color: var(--text-muted);
   letter-spacing: 0.05em;
@@ -211,9 +213,9 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  margin-top: 8px;
-  padding-top: 8px;
+  gap: 2px;
+  margin-top: 4px;
+  padding-top: 4px;
   border-top: 1px solid var(--border);
   width: 100%;
 }
@@ -305,17 +307,17 @@ html, body {
 /* ── Selection Floating Bar ── */
 .selection-bar {
   position: absolute;
-  bottom: 18px;
+  bottom: calc(54px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: var(--surface2);
   border: 1px solid var(--border);
-  padding: 6px 12px;
+  padding: 5px 10px;
   border-radius: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
   z-index: 50;
   backdrop-filter: blur(8px);
 }
@@ -628,7 +630,7 @@ html, body {
 /* ── Toast ── */
 #toast {
   position: fixed;
-  bottom: 80px;
+  bottom: calc(105px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%) translateY(20px);
   background: var(--surface2);

@@ -47,8 +47,9 @@ toolManager.register('paste', {
   },
 
   onDeactivate() {
-    if (_previewOverlay) {
-      _previewOverlay.classList.add('hidden');
+    const box = _previewOverlay || document.getElementById('paste-preview-box');
+    if (box) {
+      box.classList.add('hidden');
     }
   },
 

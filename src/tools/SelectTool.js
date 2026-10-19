@@ -21,6 +21,7 @@ toolManager.register('select', {
 
   onDeactivate() {
     _startCell = null;
+    state.setSelection(null);
   },
 
   onPointerDown(cell) {
