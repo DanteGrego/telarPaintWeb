@@ -161,6 +161,10 @@ class AppState extends EventTarget {
   }
 
   setActiveTool(name) {
+    if (this.activeTool !== name && name !== 'copy' && this.selection) {
+      this.selection = null;
+      this._emit('selectionChange', { selection: null });
+    }
     this.activeTool = name;
     this._emit('toolChange', { tool: name });
   }
@@ -198,6 +202,8 @@ class AppState extends EventTarget {
       }
     }
     this.clipboard = { rows, cols, data };
+    this.selection = null;
+    this._emit('selectionChange', { selection: null });
     this._emit('clipboardChange');
   }
 

@@ -66,14 +66,29 @@ function renderInstructions() {
     instr.segments.forEach((seg, i) => {
       const sp = document.createElement('span');
       sp.className = 'instruction-segment';
-      sp.style.color = seg.color === 'A' ? colorA : colorB;
-      // Add a subtle text shadow for readability on dark bg
-      sp.style.textShadow = '0 0 4px rgba(0,0,0,0.8), 0 0 2px rgba(0,0,0,1)';
-      sp.style.fontWeight = '700';
-      sp.style.fontSize = '15px';
+      const mainColor = seg.color === 'A' ? colorA : colorB;
+      const oppColor = seg.color === 'A' ? colorB : colorA;
+
+      sp.style.color = mainColor;
+      sp.style.fontWeight = '800';
+      sp.style.fontSize = '16px';
+      // Border with opposite yarn color for maximum visibility on any background
+      sp.style.webkitTextStroke = `1px ${oppColor}`;
+      sp.style.textStroke = `1px ${oppColor}`;
+      sp.style.paintOrder = 'stroke fill';
+      sp.style.textShadow = `
+        -1px -1px 0 ${oppColor},
+         1px -1px 0 ${oppColor},
+        -1px  1px 0 ${oppColor},
+         1px  1px 0 ${oppColor},
+         0px -1px 0 ${oppColor},
+         0px  1px 0 ${oppColor},
+        -1px  0px 0 ${oppColor},
+         1px  0px 0 ${oppColor}
+      `;
       sp.textContent = `${seg.count}${seg.color === 'A' ? '↑' : '↓'}`;
       if (i < instr.segments.length - 1) {
-        sp.style.marginRight = '6px';
+        sp.style.marginRight = '8px';
       }
       detail.appendChild(sp);
     });

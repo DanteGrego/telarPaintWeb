@@ -14,6 +14,11 @@ const btnZoomOut = document.getElementById('btn-zoom-out');
 const btnZoomReset = document.getElementById('btn-zoom-reset');
 const btnSwapColors = document.getElementById('btn-swap-colors');
 
+const floatZoomIn = document.getElementById('btn-float-zoom-in');
+const floatZoomOut = document.getElementById('btn-float-zoom-out');
+const floatZoomReset = document.getElementById('btn-float-zoom-reset');
+const floatZoomText = document.getElementById('float-zoom-text');
+
 const btnSymH = document.getElementById('btn-sym-h');
 const btnSymV = document.getElementById('btn-sym-v');
 
@@ -33,7 +38,13 @@ export function renderToolButtons() {
     btn.setAttribute('aria-label', tool.label);
     btn.innerHTML = tool.icon;
     btn.dataset.tool = name;
-    btn.addEventListener('click', () => {
+
+    btn.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+    });
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       toolManager.activate(name);
     });
     toolButtonsEl.appendChild(btn);
@@ -83,17 +94,23 @@ function updateSelectionBar() {
 }
 
 if (btnCopySel) {
-  btnCopySel.addEventListener('click', () => {
+  btnCopySel.addEventListener('pointerdown', (e) => e.stopPropagation());
+  btnCopySel.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (state.selection) {
       state.copySelection();
       showToast('Selección copiada ✓');
-      if (btnPasteSel) btnPasteSel.disabled = false;
+      toolManager.activate('paste');
     }
   });
 }
 
 if (btnPasteSel) {
-  btnPasteSel.addEventListener('click', () => {
+  btnPasteSel.addEventListener('pointerdown', (e) => e.stopPropagation());
+  btnPasteSel.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (state.clipboard) {
       toolManager.activate('paste');
     }
@@ -101,7 +118,10 @@ if (btnPasteSel) {
 }
 
 if (btnClearSel) {
-  btnClearSel.addEventListener('click', () => {
+  btnClearSel.addEventListener('pointerdown', (e) => e.stopPropagation());
+  btnClearSel.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     state.setSelection(null);
   });
 }
@@ -127,9 +147,18 @@ window.addEventListener('keydown', (e) => {
 
 // ── Zoom ──────────────────────────────────────────────────────────────────────
 
-btnZoomIn.addEventListener('click', () => state.setZoom(state.zoom + 0.25));
-btnZoomOut.addEventListener('click', () => state.setZoom(state.zoom - 0.25));
-btnZoomReset.addEventListener('click', () => state.setZoom(1));
+function updateZoomDisplay() {
+  const pct = `${Math.round(state.zoom * 100)}%`;
+  if (floatZoomText) floatZoomText.textContent = pct;
+}
+
+if (btnZoomIn) btnZoomIn.addEventListener('click', () => state.setZoom(state.zoom + 0.25));
+if (btnZoomOut) btnZoomOut.addEventListener('click', () => state.setZoom(state.zoom - 0.25));
+if (btnZoomReset) btnZoomReset.addEventListener('click', () => state.setZoom(1));
+
+if (floatZoomIn) floatZoomIn.addEventListener('click', () => state.setZoom(state.zoom + 0.25));
+if (floatZoomOut) floatZoomOut.addEventListener('click', () => state.setZoom(state.zoom - 0.25));
+if (floatZoomReset) floatZoomReset.addEventListener('click', () => state.setZoom(1));
 
 // ── Color swap ────────────────────────────────────────────────────────────────
 
@@ -144,7 +173,9 @@ state.addEventListener('toolChange', () => {
 state.addEventListener('historyChange', updateHistoryButtons);
 state.addEventListener('symmetryChange', updateSymmetryButtons);
 state.addEventListener('selectionChange', updateSelectionBar);
+state.addEventListener('zoomChange', updateZoomDisplay);
 
 // Initialize
 updateHistoryButtons();
 updateSymmetryButtons();
+updateZoomDisplay();

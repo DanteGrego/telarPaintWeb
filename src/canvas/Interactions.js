@@ -69,9 +69,17 @@ function endPan() {
   viewport.classList.remove('panning');
 }
 
+let _lastTouchTime = 0;
+
+function isSyntheticMouseEvent(e) {
+  return (Date.now() - _lastTouchTime) < 700;
+}
+
 // ── Event handlers ─────────────────────────────────────────────────────────────
 
 function onPointerDown(e) {
+  if (e.type === 'mousedown' && isSyntheticMouseEvent(e)) return;
+
   // Middle button or space+click → pan
   if (e.button === 1 || state.activeTool === 'pan') {
     e.preventDefault();
@@ -90,6 +98,8 @@ function onPointerDown(e) {
 }
 
 function onPointerMove(e) {
+  if (e.type === 'mousemove' && isSyntheticMouseEvent(e)) return;
+
   if (!_isDown) {
     if (state.activeTool === 'paste') {
       const cell = cellFromPointerEvent(e);
@@ -114,6 +124,7 @@ function onPointerMove(e) {
 }
 
 function onPointerUp(e) {
+  if (e.type === 'mouseup' && isSyntheticMouseEvent(e)) return;
   if (!_isDown) return;
   _isDown = false;
 
@@ -138,6 +149,7 @@ function pinchDistance(e) {
 }
 
 function onTouchStart(e) {
+  _lastTouchTime = Date.now();
   if (e.touches.length === 2) {
     _lastPinchDist = pinchDistance(e);
     return;
@@ -146,6 +158,7 @@ function onTouchStart(e) {
 }
 
 function onTouchMove(e) {
+  _lastTouchTime = Date.now();
   if (e.touches.length === 2) {
     if (_lastPinchDist === null) return;
     const dist = pinchDistance(e);
@@ -160,6 +173,7 @@ function onTouchMove(e) {
 }
 
 function onTouchEnd(e) {
+  _lastTouchTime = Date.now();
   _lastPinchDist = null;
   onPointerUp(e);
 }
@@ -181,13 +195,27 @@ window.addEventListener('mouseup', onPointerUp);
 
 viewport.addEventListener('touchstart', onTouchStart, { passive: false });
 viewport.addEventListener('touchmove', onTouchMove, { passive: false });
-viewport.addEventListener('touchend', onTouchEnd, { passive: true });
+window.addEventListener('touchend', onTouchEnd, { passive: true });
+window.addEventListener('touchcancel', onTouchEnd, { passive: true });
 
 viewport.addEventListener('wheel', onWheel, { passive: false });
 
 viewport.addEventListener('mouseleave', () => {
   const box = document.getElementById('paste-preview-box');
   if (box) box.classList.add('hidden');
+});
+
+// Clean up if tool changes or window loses focus
+state.addEventListener('toolChange', () => {
+  _isDown = false;
+  _lastCell = null;
+  endPan();
+});
+
+window.addEventListener('blur', () => {
+  _isDown = false;
+  _lastCell = null;
+  endPan();
 });
 
 // Prevent context menu on long press / right click over grid

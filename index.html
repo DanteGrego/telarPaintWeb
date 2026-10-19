@@ -79,6 +79,19 @@
 
     <!-- Main canvas area -->
     <main id="canvas-container">
+      <div id="floating-zoom-bar" class="floating-zoom-bar" role="group" aria-label="Controles de zoom">
+        <button id="btn-float-zoom-out" class="float-zoom-btn" title="Alejar" aria-label="Alejar">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" fill="none"/><path d="M21 21l-4.35-4.35M8 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <span id="float-zoom-text" class="float-zoom-text">100%</span>
+        <button id="btn-float-zoom-in" class="float-zoom-btn" title="Acercar" aria-label="Acercar">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" fill="none"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button id="btn-float-zoom-reset" class="float-zoom-btn reset" title="Restablecer zoom" aria-label="Restablecer zoom">
+          <svg viewBox="0 0 24 24"><path d="M4 4h6M4 4v6M20 20h-6M20 20v-6M4 20v-6M4 20h6M20 4h-6M20 4v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+        </button>
+      </div>
+
       <div id="canvas-viewport">
         <div id="pattern-grid" role="grid" aria-label="Cuadrícula de patrón">
           <div id="sym-guide-v" class="sym-guide-v hidden" aria-hidden="true"></div>
