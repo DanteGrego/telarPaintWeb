@@ -16,6 +16,7 @@ import './tools/LineTool.js';
 import './tools/RectTool.js';
 import './tools/CircleTool.js';
 import './tools/SelectTool.js';
+import './tools/PasteTool.js';
 import './tools/PanTool.js';
 
 // ── Exporter registrations ────────────────────────────────────────────────────

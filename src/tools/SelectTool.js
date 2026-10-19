@@ -1,8 +1,5 @@
 /**
  * SelectTool.js — Rectangular selection, copy and paste
- *
- * Click/drag to select a region.
- * Paste from clipboard on second tap in paste mode.
  */
 
 import { state } from '../store/AppState.js';
@@ -10,7 +7,6 @@ import { toolManager } from './ToolManager.js';
 import { showToast } from '../ui/Toast.js';
 
 let _startCell = null;
-let _pasteMode = false;
 
 toolManager.register('select', {
   label: 'Selección',
@@ -20,23 +16,15 @@ toolManager.register('select', {
   </svg>`,
 
   onActivate() {
-    _pasteMode = false;
+    _startCell = null;
   },
 
   onDeactivate() {
-    state.setSelection(null);
-    _pasteMode = false;
     _startCell = null;
   },
 
   onPointerDown(cell) {
     if (!cell) return;
-    if (_pasteMode && state.clipboard) {
-      state.pasteAt(cell.row, cell.col);
-      _pasteMode = false;
-      showToast('Pegado');
-      return;
-    }
     _startCell = cell;
     state.setSelection({ r1: cell.row, c1: cell.col, r2: cell.row, c2: cell.col });
   },
@@ -46,24 +34,22 @@ toolManager.register('select', {
     state.setSelection({ r1: _startCell.row, c1: _startCell.col, r2: cell.row, c2: cell.col });
   },
 
-  onPointerUp() {
+  onPointerUp(cell) {
+    if (_startCell && cell) {
+      state.setSelection({ r1: _startCell.row, c1: _startCell.col, r2: cell.row, c2: cell.col });
+    }
     _startCell = null;
   },
 });
 
-// Keyboard shortcuts for copy/paste while select tool active
+// Keyboard shortcuts for copy/paste
 window.addEventListener('keydown', (e) => {
-  if (state.activeTool !== 'select') return;
   if (e.ctrlKey || e.metaKey) {
-    if (e.key === 'c') {
+    if (e.key === 'c' && state.selection) {
       state.copySelection();
-      showToast('Copiado');
-    } else if (e.key === 'v') {
-      if (state.clipboard) {
-        _pasteMode = true;
-        showToast('Haz clic para pegar');
-      }
+      showToast('Selección copiada ✓');
+    } else if (e.key === 'v' && state.clipboard) {
+      toolManager.activate('paste');
     }
   }
 });
-

@@ -1,5 +1,5 @@
 /**
- * EraserTool.js — Paints cells with color B (background/abajo)
+ * EraserTool.js — Paints cells with color B (background/abajo) with symmetry
  */
 
 import { state, CELL_B } from '../store/AppState.js';
@@ -17,16 +17,23 @@ toolManager.register('eraser', {
   onPointerDown(cell) {
     if (!cell) return;
     _erasing = true;
-    state.setCell(cell.row, cell.col, CELL_B);
+    const coords = state.getSymmetricCoords(cell.row, cell.col);
+    const changes = coords.map((c) => ({ row: c.row, col: c.col, value: CELL_B }));
+    state.batchSetCells(changes, { pushHistory: true });
   },
 
   onPointerMove(cell) {
     if (!_erasing || !cell) return;
-    state.setCell(cell.row, cell.col, CELL_B, { pushHistory: false });
+    const coords = state.getSymmetricCoords(cell.row, cell.col);
+    const changes = coords.map((c) => ({ row: c.row, col: c.col, value: CELL_B }));
+    state.batchSetCells(changes, { pushHistory: false });
   },
 
   onPointerUp() {
     _erasing = false;
   },
-});
 
+  onDeactivate() {
+    _erasing = false;
+  },
+});

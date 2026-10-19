@@ -1,8 +1,7 @@
 /**
- * FillTool.js — Flood fill (bote de pintura)
+ * FillTool.js — Flood fill (bote de pintura) with symmetry
  *
- * BFS flood fill starting from the tapped cell,
- * replacing all connected cells of the same value.
+ * BFS flood fill starting from the tapped cell and mirrored cells.
  */
 
 import { state } from '../store/AppState.js';
@@ -20,38 +19,43 @@ toolManager.register('fill', {
 
   onPointerDown(cell) {
     if (!cell) return;
-    const { row, col } = cell;
-    const targetValue = state.getCell(row, col);
+    const { rows, cols, grid } = state;
     const fillValue = state.activeColor;
-    if (targetValue === fillValue) return;
+    const seeds = state.getSymmetricCoords(cell.row, cell.col);
 
     const changes = [];
-    const { rows, cols, grid } = state;
     const visited = new Uint8Array(rows * cols);
 
-    const queue = [row * cols + col];
-    visited[queue[0]] = 1;
+    for (const seed of seeds) {
+      const startIdx = seed.row * cols + seed.col;
+      const targetValue = grid[startIdx];
+      if (targetValue === fillValue || visited[startIdx]) continue;
 
-    while (queue.length) {
-      const idx = queue.shift();
-      const r = Math.floor(idx / cols);
-      const c = idx % cols;
-      changes.push({ row: r, col: c, value: fillValue });
+      const queue = [startIdx];
+      visited[startIdx] = 1;
 
-      const neighbors = [
-        [r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1],
-      ];
-      for (const [nr, nc] of neighbors) {
-        if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
-        const ni = nr * cols + nc;
-        if (!visited[ni] && grid[ni] === targetValue) {
-          visited[ni] = 1;
-          queue.push(ni);
+      while (queue.length) {
+        const idx = queue.shift();
+        const r = Math.floor(idx / cols);
+        const c = idx % cols;
+        changes.push({ row: r, col: c, value: fillValue });
+
+        const neighbors = [
+          [r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1],
+        ];
+        for (const [nr, nc] of neighbors) {
+          if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
+          const ni = nr * cols + nc;
+          if (!visited[ni] && grid[ni] === targetValue) {
+            visited[ni] = 1;
+            queue.push(ni);
+          }
         }
       }
     }
 
-    state.batchSetCells(changes);
+    if (changes.length > 0) {
+      state.batchSetCells(changes);
+    }
   },
 });
-

@@ -19,8 +19,11 @@ let _lastCell = null;
 
 function gridCoords(e) {
   const rect = grid.getBoundingClientRect();
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  const touch = (e.touches && e.touches.length > 0)
+    ? e.touches[0]
+    : (e.changedTouches && e.changedTouches.length > 0 ? e.changedTouches[0] : null);
+  const clientX = touch ? touch.clientX : (e.clientX ?? 0);
+  const clientY = touch ? touch.clientY : (e.clientY ?? 0);
   const x = (clientX - rect.left) / state.zoom;
   const y = (clientY - rect.top) / state.zoom;
   return { x, y };
@@ -36,20 +39,28 @@ function cellFromPointerEvent(e) {
 let _panStart = null;
 let _panScrollStart = null;
 
+function getClientPos(e) {
+  const touch = (e.touches && e.touches.length > 0)
+    ? e.touches[0]
+    : (e.changedTouches && e.changedTouches.length > 0 ? e.changedTouches[0] : null);
+  return {
+    x: touch ? touch.clientX : (e.clientX ?? 0),
+    y: touch ? touch.clientY : (e.clientY ?? 0),
+  };
+}
+
 function startPan(e) {
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-  _panStart = { x: clientX, y: clientY };
+  const pos = getClientPos(e);
+  _panStart = pos;
   _panScrollStart = { x: viewport.scrollLeft, y: viewport.scrollTop };
   viewport.classList.add('panning');
 }
 
 function updatePan(e) {
   if (!_panStart) return;
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-  viewport.scrollLeft = _panScrollStart.x - (clientX - _panStart.x);
-  viewport.scrollTop  = _panScrollStart.y - (clientY - _panStart.y);
+  const pos = getClientPos(e);
+  viewport.scrollLeft = _panScrollStart.x - (pos.x - _panStart.x);
+  viewport.scrollTop  = _panScrollStart.y - (pos.y - _panStart.y);
 }
 
 function endPan() {
@@ -105,7 +116,7 @@ function onPointerUp(e) {
     return;
   }
 
-  const cell = cellFromPointerEvent(e);
+  const cell = cellFromPointerEvent(e) || _lastCell;
   toolManager.onPointerUp(cell, e);
   _lastCell = null;
 }

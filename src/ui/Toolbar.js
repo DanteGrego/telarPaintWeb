@@ -4,6 +4,7 @@
 
 import { state } from '../store/AppState.js';
 import { toolManager } from '../tools/ToolManager.js';
+import { showToast } from './Toast.js';
 
 const toolButtonsEl = document.getElementById('tool-buttons');
 const btnUndo = document.getElementById('btn-undo');
@@ -12,6 +13,14 @@ const btnZoomIn = document.getElementById('btn-zoom-in');
 const btnZoomOut = document.getElementById('btn-zoom-out');
 const btnZoomReset = document.getElementById('btn-zoom-reset');
 const btnSwapColors = document.getElementById('btn-swap-colors');
+
+const btnSymH = document.getElementById('btn-sym-h');
+const btnSymV = document.getElementById('btn-sym-v');
+
+const selectionBar = document.getElementById('selection-bar');
+const btnCopySel = document.getElementById('btn-copy-selection');
+const btnPasteSel = document.getElementById('btn-paste-selection');
+const btnClearSel = document.getElementById('btn-clear-selection');
 
 // ── Tool Buttons ───────────────────────────────────────────────────────────────
 
@@ -35,6 +44,66 @@ function updateToolButtons() {
   for (const btn of toolButtonsEl.querySelectorAll('.icon-btn')) {
     btn.classList.toggle('active', btn.dataset.tool === state.activeTool);
   }
+}
+
+// ── Symmetry Controls ─────────────────────────────────────────────────────────
+
+if (btnSymH) {
+  btnSymH.addEventListener('click', () => {
+    state.toggleSymmetryH();
+    showToast(state.symH ? 'Simetría columna activada' : 'Simetría columna desactivada');
+  });
+}
+
+if (btnSymV) {
+  btnSymV.addEventListener('click', () => {
+    state.toggleSymmetryV();
+    showToast(state.symV ? 'Simetría fila activada' : 'Simetría fila desactivada');
+  });
+}
+
+function updateSymmetryButtons() {
+  if (btnSymH) btnSymH.classList.toggle('active', state.symH);
+  if (btnSymV) btnSymV.classList.toggle('active', state.symV);
+}
+
+// ── Selection Bar Controls ───────────────────────────────────────────────────
+
+function updateSelectionBar() {
+  if (!selectionBar) return;
+  if (state.selection && state.activeTool === 'select') {
+    selectionBar.classList.remove('hidden');
+    // Enable or disable paste in selection bar based on clipboard
+    if (btnPasteSel) {
+      btnPasteSel.disabled = !state.clipboard;
+    }
+  } else {
+    selectionBar.classList.add('hidden');
+  }
+}
+
+if (btnCopySel) {
+  btnCopySel.addEventListener('click', () => {
+    if (state.selection) {
+      state.copySelection();
+      showToast('Selección copiada ✓');
+      if (btnPasteSel) btnPasteSel.disabled = false;
+    }
+  });
+}
+
+if (btnPasteSel) {
+  btnPasteSel.addEventListener('click', () => {
+    if (state.clipboard) {
+      toolManager.activate('paste');
+    }
+  });
+}
+
+if (btnClearSel) {
+  btnClearSel.addEventListener('click', () => {
+    state.setSelection(null);
+  });
 }
 
 // ── Undo / Redo ───────────────────────────────────────────────────────────────
@@ -68,9 +137,14 @@ btnSwapColors.addEventListener('click', () => state.swapColors());
 
 // ── Subscriptions ─────────────────────────────────────────────────────────────
 
-state.addEventListener('toolChange', updateToolButtons);
+state.addEventListener('toolChange', () => {
+  updateToolButtons();
+  updateSelectionBar();
+});
 state.addEventListener('historyChange', updateHistoryButtons);
+state.addEventListener('symmetryChange', updateSymmetryButtons);
+state.addEventListener('selectionChange', updateSelectionBar);
 
 // Initialize
 updateHistoryButtons();
-
+updateSymmetryButtons();

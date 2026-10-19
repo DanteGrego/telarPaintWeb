@@ -17,6 +17,7 @@ const STATIC_ASSETS = [
   '/src/tools/RectTool.js',
   '/src/tools/CircleTool.js',
   '/src/tools/SelectTool.js',
+  '/src/tools/PasteTool.js',
   '/src/tools/PanTool.js',
   '/src/instructions/InstructionGenerator.js',
   '/src/export/ExportManager.js',

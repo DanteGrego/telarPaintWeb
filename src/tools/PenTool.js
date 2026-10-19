@@ -1,5 +1,5 @@
 /**
- * PenTool.js — Freehand pixel painting
+ * PenTool.js — Freehand pixel painting with symmetry
  */
 
 import { state } from '../store/AppState.js';
@@ -17,16 +17,23 @@ toolManager.register('pen', {
   onPointerDown(cell) {
     if (!cell) return;
     _painting = true;
-    state.setCell(cell.row, cell.col, state.activeColor);
+    const coords = state.getSymmetricCoords(cell.row, cell.col);
+    const changes = coords.map((c) => ({ row: c.row, col: c.col, value: state.activeColor }));
+    state.batchSetCells(changes, { pushHistory: true });
   },
 
   onPointerMove(cell) {
     if (!_painting || !cell) return;
-    state.setCell(cell.row, cell.col, state.activeColor, { pushHistory: false });
+    const coords = state.getSymmetricCoords(cell.row, cell.col);
+    const changes = coords.map((c) => ({ row: c.row, col: c.col, value: state.activeColor }));
+    state.batchSetCells(changes, { pushHistory: false });
   },
 
   onPointerUp() {
     _painting = false;
   },
-});
 
+  onDeactivate() {
+    _painting = false;
+  },
+});

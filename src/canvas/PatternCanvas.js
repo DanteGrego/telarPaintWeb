@@ -40,6 +40,35 @@ export function buildGrid() {
 
   // Paint all cells
   paintAll();
+  updateSymmetryGuides();
+}
+
+// ── Symmetry Guides ────────────────────────────────────────────────────────────
+
+export function updateSymmetryGuides() {
+  const guideV = document.getElementById('sym-guide-v');
+  const guideH = document.getElementById('sym-guide-h');
+  if (!guideV || !guideH) return;
+
+  const size = getCellSize();
+  const totalW = state.cols * size;
+  const totalH = state.rows * size;
+
+  if (state.symH) {
+    guideV.classList.remove('hidden');
+    guideV.style.left = `${totalW / 2}px`;
+    guideV.style.height = `${totalH}px`;
+  } else {
+    guideV.classList.add('hidden');
+  }
+
+  if (state.symV) {
+    guideH.classList.remove('hidden');
+    guideH.style.top = `${totalH / 2}px`;
+    guideH.style.width = `${totalW}px`;
+  } else {
+    guideH.classList.add('hidden');
+  }
 }
 
 // ── Full repaint ───────────────────────────────────────────────────────────────
@@ -134,4 +163,5 @@ state.addEventListener('colorsChange', () => paintAll());
 state.addEventListener('zoomChange', (e) => applyZoom(e.detail.zoom));
 state.addEventListener('selectionChange', (e) => renderSelection(e.detail.selection));
 state.addEventListener('dimensionsChange', () => buildGrid());
+state.addEventListener('symmetryChange', () => updateSymmetryGuides());
 

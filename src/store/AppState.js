@@ -38,9 +38,59 @@ class AppState extends EventTarget {
     /** Clipboard: { cols, rows, data: Uint8Array } */
     this.clipboard = null;
 
+    this.symH = false; // Mirror across central column
+    this.symV = false; // Mirror across central row
+
     // Undo/redo stacks — each entry is a serialized grid snapshot
     this._undoStack = [];
     this._redoStack = [];
+  }
+
+  // ── Symmetry ──────────────────────────────────────────────
+
+  setSymmetryH(enabled) {
+    this.symH = !!enabled;
+    this._emit('symmetryChange', { symH: this.symH, symV: this.symV });
+  }
+
+  setSymmetryV(enabled) {
+    this.symV = !!enabled;
+    this._emit('symmetryChange', { symH: this.symH, symV: this.symV });
+  }
+
+  toggleSymmetryH() {
+    this.setSymmetryH(!this.symH);
+  }
+
+  toggleSymmetryV() {
+    this.setSymmetryV(!this.symV);
+  }
+
+  /**
+   * Return unique coordinates for a cell taking active symmetry into account
+   * @param {number} row
+   * @param {number} col
+   * @returns {{ row: number, col: number }[]}
+   */
+  getSymmetricCoords(row, col) {
+    const coords = [{ row, col }];
+    if (!this.symH && !this.symV) return coords;
+
+    const mCol = this.cols - 1 - col;
+    const mRow = this.rows - 1 - row;
+
+    if (this.symH && mCol !== col) {
+      coords.push({ row, col: mCol });
+    }
+    if (this.symV && mRow !== row) {
+      coords.push({ row: mRow, col });
+    }
+    if (this.symH && this.symV) {
+      if (mRow !== row || mCol !== col) {
+        coords.push({ row: mRow, col: mCol });
+      }
+    }
+    return coords;
   }
 
   // ── Grid Helpers ──────────────────────────────────────────
@@ -61,9 +111,9 @@ class AppState extends EventTarget {
     this._emit('gridChange', { type: 'cell', row, col, value });
   }
 
-  /** Batch-set cells from an array of { row, col, value } without repeated history pushes */
-  batchSetCells(changes) {
-    this._pushHistory();
+  /** Batch-set cells from an array of { row, col, value } with optional history push */
+  batchSetCells(changes, { pushHistory = true } = {}) {
+    if (pushHistory) this._pushHistory();
     for (const { row, col, value } of changes) {
       if (row < 0 || row >= this.rows || col < 0 || col >= this.cols) continue;
       this.grid[this.idx(row, col)] = value;

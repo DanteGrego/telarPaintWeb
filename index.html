@@ -23,6 +23,14 @@
         </button>
         <span id="pattern-title-display" class="title-text">Sin título</span>
       </div>
+      <div id="topbar-center">
+        <button id="btn-sym-h" class="icon-btn" title="Simetría horizontal (columna central)" aria-label="Simetría horizontal (columna central)">
+          <svg viewBox="0 0 24 24"><path d="M12 3v18M8 8l-4 4 4 4M16 8l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        </button>
+        <button id="btn-sym-v" class="icon-btn" title="Simetría vertical (fila central)" aria-label="Simetría vertical (fila central)">
+          <svg viewBox="0 0 24 24"><path d="M3 12h18M8 8l4-4 4 4M8 16l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        </button>
+      </div>
       <div id="topbar-right">
         <button id="btn-undo" class="icon-btn" title="Deshacer" aria-label="Deshacer" disabled>
           <svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5M4 9h11a6 6 0 010 12h-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
@@ -72,9 +80,25 @@
     <!-- Main canvas area -->
     <main id="canvas-container">
       <div id="canvas-viewport">
-        <div id="pattern-grid" role="grid" aria-label="Cuadrícula de patrón"></div>
+        <div id="pattern-grid" role="grid" aria-label="Cuadrícula de patrón">
+          <div id="sym-guide-v" class="sym-guide-v hidden" aria-hidden="true"></div>
+          <div id="sym-guide-h" class="sym-guide-h hidden" aria-hidden="true"></div>
+          <div id="paste-preview-box" class="paste-preview-box hidden" aria-hidden="true"></div>
+        </div>
       </div>
-
+      <div id="selection-bar" class="selection-bar hidden" role="toolbar" aria-label="Acciones de selección">
+        <button id="btn-copy-selection" class="sel-bar-btn" title="Copiar selección">
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2" fill="none"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+          <span>Copiar</span>
+        </button>
+        <button id="btn-paste-selection" class="sel-bar-btn" title="Pegar selección" disabled>
+          <svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><rect x="8" y="2" width="8" height="4" rx="1" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+          <span>Pegar</span>
+        </button>
+        <button id="btn-clear-selection" class="sel-bar-btn close-btn" title="Deseleccionar">
+          <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
     </main>
 
     <!-- Side drawer (menu) -->
